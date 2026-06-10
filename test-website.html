@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ENV:SITE_TITLE}} — OracleHost Test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #030817;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 1.25rem;
+      padding: 2.5rem;
+      max-width: 640px;
+      width: 100%;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(99, 102, 241, 0.12);
+      color: #a5b4fc;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.3rem 0.8rem;
+      border-radius: 9999px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e0e7ff, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+    }
+    .msg-box {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #2dd4bf;
+      padding: 1rem;
+      border: 1px solid rgba(45, 212, 191, 0.2);
+      border-radius: 0.75rem;
+      background: rgba(45, 212, 191, 0.04);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .info-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(99, 102, 241, 0.08);
+      border-radius: 0.75rem;
+      padding: 0.75rem;
+    }
+    .info-item .label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      font-weight: 600;
+    }
+    .info-item .value {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      font-weight: 600;
+      margin-top: 0.2rem;
+    }
+    .info-item .value.green { color: #22c55e; }
+    .info-item .value.indigo { color: #818cf8; }
+
+    .env-section { margin-top: 0.5rem; }
+    .env-toggle {
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #818cf8;
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .env-toggle:hover {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(99, 102, 241, 0.35);
+    }
+    .env-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+      display: none;
+      margin-top: 0.75rem;
+    }
+    .env-table.visible { display: table; }
+    .env-table th {
+      color: #818cf8;
+      font-weight: 600;
+      padding: 0.5rem 0.4rem;
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+      text-align: left;
+    }
+    .env-table td {
+      padding: 0.35rem 0.4rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+      color: #94a3b8;
+      word-break: break-all;
+    }
+    .env-table td:first-child {
+      font-family: monospace;
+      color: #2dd4bf;
+      font-weight: 500;
+    }
+    .footer {
+      margin-top: 1.5rem;
+      text-align: center;
+      font-size: 0.72rem;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge"><span class="dot"></span>ORACLEHOST</div>
+    <h1>{{ENV:SITE_TITLE}}</h1>
+    <div class="msg-box">{{ENV:MESSAGE}}</div>
+
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="label">Status</div>
+        <div class="value green">● Live</div>
+      </div>
+      <div class="info-item">
+        <div class="label">Deployed</div>
+        <div class="value indigo" id="deploy-time">{{ENV:DEPLOY_TIME}}</div>
+      </div>
+    </div>
+
+    <div class="env-section">
+      <button class="env-toggle" id="envBtn" onclick="toggleEnv()">
+        Show Environment Variables
+      </button>
+      <table class="env-table" id="envTable">
+        <thead><tr><th>Variable</th><th>Value</th></tr></thead>
+        <tbody id="envBody"></tbody>
+      </table>
+    </div>
+
+    <div class="footer">
+      OracleHost Static Website Hosting &mdash; {{ENV:SITE_TITLE}}
+    </div>
+  </div>
+
+  <script>
+    // ── Env vars injected at deploy time ─────────────────────────
+    // These come from {{ENV:...}} replacements in deployment-service.ts
+    const ENV = {
+      SITE_TITLE: '{{ENV:SITE_TITLE}}',
+      MESSAGE: '{{ENV:MESSAGE}}',
+      DEPLOY_TIME: '{{ENV:DEPLOY_TIME}}',
+      SHOW_ENV: '{{ENV:SHOW_ENV}}',
+    };
+
+    // ── Show current time (client-side) ──────────────────────────
+    const timeEl = document.getElementById('deploy-time');
+    if (timeEl) {
+      const deployDate = new Date(ENV.DEPLOY_TIME || Date.now());
+      const isPlaceholder = ENV.DEPLOY_TIME === '{{ENV:DEPLOY_TIME}}' || !ENV.DEPLOY_TIME;
+      if (!isPlaceholder) {
+        timeEl.textContent = deployDate.toLocaleString();
+      } else {
+        timeEl.textContent = 'Just now (no DEPLOY_TIME set)';
+      }
+    }
+
+    // ── Env table ────────────────────────────────────────────────
+    function toggleEnv() {
+      const table = document.getElementById('envTable');
+      table.classList.toggle('visible');
+      document.getElementById('envBtn').textContent =
+        table.classList.contains('visible')
+          ? 'Hide Environment Variables'
+          : 'Show Environment Variables';
+    }
+
+    // Populate env table with injected values
+    (function populateEnv() {
+      const body = document.getElementById('envBody');
+      if (!body) return;
+      const showAll = ENV.SHOW_ENV === 'true';
+      let rows = '';
+      for (const [key, val] of Object.entries(ENV)) {
+        // Skip SHOW_ENV itself unless user explicitly wants it
+        if (key === 'SHOW_ENV' && !showAll) continue;
+        const display = (showAll || key !== 'SHOW_ENV') ? val : '(hidden)';
+        rows += '<tr><td>' + key + '</td><td>' + escapeHtml(display) + '</td></tr>';
+      }
+      if (!showAll) {
+        rows += '<tr><td colspan="2" style="text-align:center;color:#64748b;padding-top:0.75rem;font-style:italic;">Set SHOW_ENV=true to see all values</td></tr>';
+      }
+      body.innerHTML = rows || '<tr><td colspan="2" style="text-align:center;color:#64748b;">No env vars injected</td></tr>';
+    })();
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>
